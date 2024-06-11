@@ -1,0 +1,48 @@
+/* View all columns and roll in datasheet */
+
+SELECT * 
+FROM [Bank Loan Data]
+
+/* KPI 1 Count Rows in sheet using the column (id) */
+
+SELECT COUNT(id) AS Total_Loan_Applications FROM [Bank Loan Data]
+
+/* Count Data filtered by the month of November (MTD) */
+
+SELECT COUNT(id) AS MTD_Sum_Loan_Applications FROM [Bank Loan Data]
+WHERE MONTH(issue_date) = 11 AND YEAR(issue_date) = 2021;
+
+/* KPI 2 - Count Total Funded Amount Month Over Month (MOM - Jan-Nov) */
+
+SELECT SUM(loan_amount) AS Total_Funded_Amount FROM [Bank Loan Data]
+
+/* - Count Total Funded Amount (MTD - Nov) */
+
+SELECT SUM(loan_amount) AS MTD_Total_Funded_Amount FROM [Bank Loan Data]
+WHERE MONTH(issue_date) = 11 AND YEAR(issue_date) = 2021;
+
+/* KPI 3 - Sum Amount Received  */
+
+SELECT SUM(total_payment) AS Total_amount_borrowed FROM [Bank Loan Data]
+
+/* Find Average Interest rate  */
+SELECT AVG(int_rate) * 100 AS Total_AVG_Interest_Rate FROM [Bank Loan Data]
+
+/* Make Average Interest rate Round to 4 decimal places */
+
+SELECT ROUND(AVG(int_rate), 4) * 100 AS Total_AVG_Interest_Rate FROM [Bank Loan Data]
+
+/* Present (MTD) Average Interest rate in 4 Rounded decimal places */
+
+SELECT ROUND(AVG(int_rate), 4) * 100 AS MTD_Avg_Interest_Rate FROM [Bank Loan Data]
+WHERE MONTH(issue_date) = 11 AND YEAR(issue_date) = 2021;
+
+
+/* Find Average DTI rate in 4 Rounded decimal places */
+
+SELECT ROUND(AVG(dti), 4) * 100 AS Avg_DTI_Rate FROM [Bank Loan Data]
+
+/* Present (MTD) Average DTI rate in 4 Rounded decimal places */
+
+SELECT ROUND(AVG(dti), 4) * 100 AS MTD_Avg_DTI_Rate FROM [Bank Loan Data]
+WHERE MONTH(issue_date) = 11 AND YEAR(issue_date) = 2021;
