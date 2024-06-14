@@ -3,46 +3,120 @@
 SELECT * 
 FROM [Bank Loan Data]
 
-/* KPI 1 Count Rows in sheet using the column (id) */
+/* ---- KPI 1 Count Rows in sheet using the column (id) */
 
 SELECT COUNT(id) AS Total_Loan_Applications FROM [Bank Loan Data]
 
-/* Count Data filtered by the month of November (MTD) */
+/* ---Count Data filtered by the month of November (MTD) */
 
 SELECT COUNT(id) AS MTD_Sum_Loan_Applications FROM [Bank Loan Data]
 WHERE MONTH(issue_date) = 11 AND YEAR(issue_date) = 2021;
 
-/* KPI 2 - Count Total Funded Amount Month Over Month (MOM - Jan-Nov) */
+/* KPI 2 ---- Count Total Funded Amount Month Over Month (MOM - Jan-Nov) */
 
 SELECT SUM(loan_amount) AS Total_Funded_Amount FROM [Bank Loan Data]
 
-/* - Count Total Funded Amount (MTD - Nov) */
+/* --- Count Total Funded Amount (MTD - Nov) */
 
 SELECT SUM(loan_amount) AS MTD_Total_Funded_Amount FROM [Bank Loan Data]
 WHERE MONTH(issue_date) = 11 AND YEAR(issue_date) = 2021;
 
-/* KPI 3 - Sum Amount Received  */
+/* KPI 3 --- Sum Amount Received  */
 
 SELECT SUM(total_payment) AS Total_amount_borrowed FROM [Bank Loan Data]
 
-/* Find Average Interest rate  */
+
+/* --- Find Average Interest rate  */
+
 SELECT AVG(int_rate) * 100 AS Total_AVG_Interest_Rate FROM [Bank Loan Data]
 
-/* Make Average Interest rate Round to 4 decimal places */
+
+/* ---- Make Average Interest rate Round to 4 decimal places */
 
 SELECT ROUND(AVG(int_rate), 4) * 100 AS Total_AVG_Interest_Rate FROM [Bank Loan Data]
 
-/* Present (MTD) Average Interest rate in 4 Rounded decimal places */
+
+/* --- Present (MTD) Average Interest rate in 4 Rounded decimal places */
 
 SELECT ROUND(AVG(int_rate), 4) * 100 AS MTD_Avg_Interest_Rate FROM [Bank Loan Data]
 WHERE MONTH(issue_date) = 11 AND YEAR(issue_date) = 2021;
 
 
-/* Find Average DTI rate in 4 Rounded decimal places */
+/* ---- Find Average DTI rate in 4 Rounded decimal places */
 
 SELECT ROUND(AVG(dti), 4) * 100 AS Avg_DTI_Rate FROM [Bank Loan Data]
 
-/* Present (MTD) Average DTI rate in 4 Rounded decimal places */
+
+/* ---- Present (MTD) Average DTI rate in 4 Rounded decimal places */
 
 SELECT ROUND(AVG(dti), 4) * 100 AS MTD_Avg_DTI_Rate FROM [Bank Loan Data]
 WHERE MONTH(issue_date) = 11 AND YEAR(issue_date) = 2021;
+
+
+/* 
+- Count total ID of Good Loan Applications
+- Find percentage of Good Loan with its decimals
+- SUM Good Loan Funded
+*/
+
+SELECT 
+COUNT(id) AS Total_Good_Loan_Application
+FROM [Bank Loan Data] 
+WHERE loan_status = 'Fully Paid' OR loan_status = 'Current' 
+
+
+SELECT
+    CAST((COUNT(CASE WHEN loan_status = 'Fully Paid' OR loan_status = 'Current' THEN id END) * 100.0) / COUNT(id) AS DECIMAL(10, 2)) AS Good_Loan_Percentage
+
+
+SELECT
+SUM(loan_amount) AS Sum_Good_Loan_Funded FROM [Bank Loan Data]
+WHERE loan_status = 'Fully Paid' OR loan_status = 'Current'
+
+
+SELECT
+SUM(total_payment) AS Good_Loan_Received_Amount FROM [Bank Loan Data]
+WHERE loan_status = 'Fully Paid' OR loan_status = 'Current'
+
+
+/* 
+- Count total ID of Bad Loan Applications
+- Find percentage of Bad Loan with its decimals
+- SUM Bad Loan Funded
+*/
+
+
+SELECT 
+COUNT(id) AS Total_Bad_Loan 
+FROM [Bank Loan Data] 
+WHERE loan_status = 'Charged Off'
+
+
+SELECT
+    CAST((COUNT(CASE WHEN loan_status = 'Charged Off' THEN id END) * 100.0) / COUNT(id) AS DECIMAL(10, 2) ) AS bad_Loan_Percentage
+FROM [Bank Loan Data];
+
+
+SELECT
+SUM(loan_amount) AS SUM_Bad_Loan_Funded FROM [Bank Loan Data]
+WHERE loan_status = 'Charged Off'
+
+
+SELECT
+SUM(total_payment) AS SUM_Bad_Loan_Funded FROM [Bank Loan Data]
+WHERE loan_status = 'Charged Off'
+
+
+/* - Bank Loan Performance Summary Table */
+
+SELECT
+		loan_status,
+		COUNT(id) AS Total_Loan_Applications,
+		SUM(total_payment) AS Total_Amount_Received,
+		SUM(loan_amount) AS Total_Funded_Amount,
+		ROUND(AVG(int_rate * 100.00), 2) AS Interest_Rate,
+		ROUND(AVG(dti * 100.00), 2) AS DTI
+	
+	FROM [Bank Loan Data]
+	GROUP BY loan_status
+
