@@ -74,11 +74,6 @@ SUM(loan_amount) AS Sum_Good_Loan_Funded FROM [Bank Loan Data]
 WHERE loan_status = 'Fully Paid' OR loan_status = 'Current'
 
 
-SELECT
-SUM(total_payment) AS Good_Loan_Received_Amount FROM [Bank Loan Data]
-WHERE loan_status = 'Fully Paid' OR loan_status = 'Current'
-
-
 /* 
 - Count total ID of Bad Loan Applications
 - Find percentage of Bad Loan with its decimals
@@ -98,16 +93,13 @@ FROM [Bank Loan Data];
 
 
 SELECT
-SUM(loan_amount) AS SUM_Bad_Loan_Funded FROM [Bank Loan Data]
-WHERE loan_status = 'Charged Off'
-
-
-SELECT
 SUM(total_payment) AS SUM_Bad_Loan_Funded FROM [Bank Loan Data]
 WHERE loan_status = 'Charged Off'
 
 
 /* - Bank Loan Performance Summary Table */
+-- Shows Total Summary based on LOAN STATUS
+-- Shows MTD (Nov) Summary based on LOAN STATUS
 
 SELECT
 		loan_status,
@@ -119,4 +111,15 @@ SELECT
 	
 	FROM [Bank Loan Data]
 	GROUP BY loan_status
+
+
+SELECT
+		loan_status,
+		COUNT(id) AS Total_Loan_Applications,
+		SUM(total_payment) AS Total_Amount_Received,
+		SUM(loan_amount) AS Total_Funded_Amount
+	FROM [Bank Loan Data]
+	WHERE MONTH(issue_date) = 11
+	GROUP BY loan_status
+
 
