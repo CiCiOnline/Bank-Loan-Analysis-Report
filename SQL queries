@@ -123,3 +123,101 @@ SELECT
 	GROUP BY loan_status
 
 
+---Summary By Loan Issue Date
+
+SELECT
+	MONTH(issue_date) AS Month_Number,
+	DATENAME(MONTH, issue_date) AS Loan_Month,
+	COUNT(id) AS Total_Loan_App,
+	SUM(loan_amount) AS Total_Funded_Amt,
+	SUM(total_payment) AS Total_Received_Amt
+FROM [Bank Loan Data]
+GROUP BY MONTH(issue_date), DATENAME(MONTH, issue_date)
+ORDER BY MONTH(issue_date)
+
+
+---Summary By Address
+
+SELECT
+	address_state,
+	COUNT(id) AS Total_Loan_App,
+	SUM(loan_amount) AS Total_Funded_Amt,
+	SUM(total_payment) AS Total_Received_Amt
+FROM [Bank Loan Data]
+GROUP BY address_state
+ORDER BY SUM(loan_amount) DESC
+
+
+---Summary By Loan Term
+
+SELECT
+	term,
+	COUNT(id) AS Total_Loan_App,
+	SUM(loan_amount) AS Total_Funded_Amt,
+	SUM(total_payment) AS Total_Received_Amt
+FROM [Bank Loan Data]
+GROUP BY term
+ORDER BY term
+
+
+---Summary By Applicant’s Employment Length 
+
+SELECT
+	emp_length,
+	COUNT(id) AS Total_Loan_App,
+	SUM(loan_amount) AS Total_Funded_Amt,
+	SUM(total_payment) AS Total_Received_Amt
+FROM [Bank Loan Data]
+GROUP BY emp_length
+ORDER BY emp_length
+
+
+---Summary By Purpose
+
+SELECT
+	purpose,
+	COUNT(id) AS Total_Loan_App,
+	SUM(loan_amount) AS Total_Funded_Amt,
+	SUM(total_payment) AS Total_Received_Amt
+FROM [Bank Loan Data]
+GROUP BY purpose
+ORDER BY COUNT(id) DESC
+
+
+---Summary By Home Ownership
+
+SELECT
+	home_ownership,
+	COUNT(id) AS Total_Loan_App,
+	SUM(loan_amount) AS Total_Funded_Amt,
+	SUM(total_payment) AS Total_Received_Amt
+FROM [Bank Loan Data]
+GROUP BY home_ownership
+ORDER BY COUNT(id) DESC
+
+
+---Summary By Grade & Sub-Grade
+
+SELECT
+	grade, sub_grade,
+	COUNT(id) AS Total_Loan_App,
+	SUM(loan_amount) AS Total_Funded_Amt,
+	SUM(total_payment) AS Total_Received_Amt
+FROM [Bank Loan Data]
+GROUP BY grade, sub_grade
+ORDER BY COUNT(id) DESC
+
+
+/* Grouping in categories using (WHERE)*/
+
+SELECT
+	home_ownership,
+	COUNT(id) AS Total_Loan_App,
+	SUM(loan_amount) AS Total_Funded_Amt,
+	SUM(total_payment) AS Total_Received_Amt
+FROM [Bank Loan Data]
+WHERE grade = 'B' AND address_state = 'CA'
+GROUP BY home_ownership
+ORDER BY COUNT(id) DESC
+
+
